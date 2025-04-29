@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		701FDADE2DC153370050BA7B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 701FDADD2DC153370050BA7B /* FirebaseAuth */; };
+		701FDAE02DC153370050BA7B /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 701FDADF2DC153370050BA7B /* FirebaseFirestore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		701FDAC02DC14FB50050BA7B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				701FDADE2DC153370050BA7B /* FirebaseAuth in Frameworks */,
+				701FDAE02DC153370050BA7B /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +119,8 @@
 			);
 			name = "VitaminList-app";
 			packageProductDependencies = (
+				701FDADD2DC153370050BA7B /* FirebaseAuth */,
+				701FDADF2DC153370050BA7B /* FirebaseFirestore */,
 			);
 			productName = "VitaminList-app";
 			productReference = 701FDAAF2DC14FB20050BA7B /* VitaminList-app.app */;
@@ -195,6 +204,9 @@
 			);
 			mainGroup = 701FDAA62DC14FB20050BA7B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				701FDADC2DC153370050BA7B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 701FDAB02DC14FB20050BA7B /* Products */;
 			projectDirPath = "";
@@ -552,6 +564,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		701FDADC2DC153370050BA7B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.12.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		701FDADD2DC153370050BA7B /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 701FDADC2DC153370050BA7B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		701FDADF2DC153370050BA7B /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 701FDADC2DC153370050BA7B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 701FDAA72DC14FB20050BA7B /* Project object */;
 }
