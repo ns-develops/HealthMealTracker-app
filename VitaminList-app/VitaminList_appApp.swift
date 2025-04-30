@@ -20,11 +20,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct YourAppNameApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject var authViewModel = AuthViewModel()
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if authViewModel.isLoggedIn {
+                ContentView()
+                    .environmentObject(authViewModel)
+            } else {
+                LoginView(authViewModel: authViewModel)
+            }
         }
     }
 }
-

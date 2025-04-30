@@ -1,5 +1,6 @@
 import Foundation
 import FirebaseFirestore
+import FirebaseAuth
 
 class VegetableUploader: ObservableObject {
     private let db = Firestore.firestore()
