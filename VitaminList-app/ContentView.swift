@@ -6,25 +6,42 @@
 //
 
 import SwiftUI
-import Firebase
 
 struct ContentView: View {
-    let db = Firestore.firestore()
-    
+    @StateObject var uploader = VegetableUploader()
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }.onAppear() {
-            db.collection("test").addDocument(data: ["name" : "Strawberry"])
+        VStack(spacing: 20) {
+            Text("Vegetable List")
+                .font(.title)
+                .padding(.top)
+
+            Button(action: {
+                uploader.uploadVegetables()
+            }) {
+                Text("Upload Vegetables")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.green)
+                    .cornerRadius(10)
+                    .padding(.horizontal)
+            }
+
+            List(uploader.vegetables) { vegetable in
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(vegetable.name)
+                        .font(.headline)
+                    Text("Vitamins: \(vegetable.vitamins.map { "\($0.key): \($0.value)" }.joined(separator: ", "))")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.vertical, 4)
+            }
         }
-        .padding()
-    }
-}
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+        .onAppear {
+            uploader.fetchVegetables()
+        }
     }
 }
