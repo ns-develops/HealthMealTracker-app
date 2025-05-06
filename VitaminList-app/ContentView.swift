@@ -8,13 +8,22 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject var uploader = VegetableUploader()
 
     var body: some View {
         VStack(spacing: 20) {
-            Text("Vegetable List")
-                .font(.title)
-                .padding(.top)
+            HStack {
+                Text("Vegetable List")
+                    .font(.title)
+                Spacer()
+                Button("Logga ut") {
+                    authViewModel.logout()
+                }
+                .foregroundColor(.red)
+            }
+            .padding(.horizontal)
+            .padding(.top)
 
             Button(action: {
                 uploader.uploadVegetables()

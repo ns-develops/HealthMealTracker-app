@@ -10,5 +10,5 @@ import Foundation
 struct Vegetable: Identifiable {
     var id: String = UUID().uuidString
     var name: String
-    var vitamins: [String: Double]  
+    var vitamins: [String: Double]
 }

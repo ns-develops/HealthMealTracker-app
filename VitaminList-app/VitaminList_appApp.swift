@@ -3,7 +3,8 @@
 //  VitaminList-app
 //
 //  Created by Natalie S on 2025-04-29.
-//
+
+
 
 import SwiftUI
 import FirebaseCore
@@ -24,12 +25,8 @@ struct YourAppNameApp: App {
 
     var body: some Scene {
         WindowGroup {
-            if authViewModel.isLoggedIn {
-                ContentView()
-                    .environmentObject(authViewModel)
-            } else {
-                LoginView(authViewModel: authViewModel)
-            }
+            RootView()
+                .environmentObject(authViewModel)
         }
     }
 }

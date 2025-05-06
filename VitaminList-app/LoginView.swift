@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct LoginView: View {
-    @ObservedObject var authViewModel: AuthViewModel
-    
+    @ObservedObject var authViewModel: AuthViewModel  
+
     @State private var isSigningUp = false
 
     var body: some View {
@@ -18,18 +18,15 @@ struct LoginView: View {
                 .font(.largeTitle)
                 .bold()
 
-            
             TextField("Email", text: $authViewModel.email)
                 .autocapitalization(.none)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
 
-       
             SecureField("Password", text: $authViewModel.password)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
 
-         
             Button(action: {
                 isSigningUp ? authViewModel.signUp() : authViewModel.login()
             }) {
@@ -42,7 +39,6 @@ struct LoginView: View {
                     .padding(.top)
             }
 
-           
             Button(action: {
                 isSigningUp.toggle()
             }) {
