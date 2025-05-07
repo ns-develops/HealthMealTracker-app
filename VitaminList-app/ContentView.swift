@@ -11,10 +11,8 @@ struct ContentView: View {
     @StateObject var authViewModel = AuthViewModel()
     @StateObject var uploader = VegetableUploader()
     
-   
     @State private var meals: [Meal] = []
     
- 
     @State private var protein = ""
     @State private var carbohydrates = ""
     @State private var salad = ""
@@ -24,7 +22,6 @@ struct ContentView: View {
         Group {
             if authViewModel.isLoggedIn {
                 VStack(spacing: 20) {
-              
                     HStack {
                         Text("Vegetable List")
                             .font(.title)
@@ -37,7 +34,6 @@ struct ContentView: View {
                     .padding(.horizontal)
                     .padding(.top)
 
-                 
                     VStack {
                         Text("Add a meal")
                             .font(.headline)
@@ -55,9 +51,16 @@ struct ContentView: View {
                             .padding()
 
                         Button("Save meal") {
-                            let newMeal = Meal(protein: protein, carbohydrates: carbohydrates, salad: salad, sweets: sweets)
+                            let newMeal = Meal(
+                                protein: protein,
+                                carbohydrates: carbohydrates,
+                                salad: salad,
+                                sweets: sweets,
+                                dateAdded: Date() 
+                            )
                             meals.append(newMeal)
                             
+                            // Clear input fields
                             protein = ""
                             carbohydrates = ""
                             salad = ""
@@ -69,7 +72,6 @@ struct ContentView: View {
                         .cornerRadius(10)
                         .padding(.top)
 
-                   
                         List(meals) { meal in
                             VStack(alignment: .leading) {
                                 Text("Protein: \(meal.protein)")
@@ -77,12 +79,14 @@ struct ContentView: View {
                                 Text("Sallad: \(meal.salad)")
                                 Text("Sötsaker: \(meal.sweets)")
                                     .foregroundColor(.secondary)
+                                Text("Datum: \(meal.dateAdded, style: .date)")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
                             }
                             .padding()
                         }
                     }
 
-            
                     Button(action: {
                         uploader.uploadVegetables()
                     }) {

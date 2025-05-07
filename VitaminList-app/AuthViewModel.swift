@@ -43,7 +43,7 @@ class AuthViewModel: ObservableObject {
                 print("Sign Up failed: \(error.localizedDescription)")
             } else {
                 print("Sign Up successful")
-                self?.login() // Logga in automatiskt efter registrering
+                self?.login() 
             }
         }
     }

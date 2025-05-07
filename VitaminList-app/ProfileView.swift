@@ -4,7 +4,6 @@
 //
 //  Created by Natalie S on 2025-05-06.
 //
-
 import SwiftUI
 import FirebaseAuth
 import FirebaseStorage
@@ -14,17 +13,16 @@ import PhotosUI
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     
-
     @State private var meals: [Meal] = []
     
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var profileImageData: Data? = nil
     @State private var email = ""
     @State private var newPassword = ""
-    @State private var showHistory = false
     @State private var showAlert = false
     @State private var alertMessage = ""
-
+    @State private var isUploadingProfileImage = false
+    
     private var user: User? {
         Auth.auth().currentUser
     }
@@ -32,11 +30,12 @@ struct ProfileView: View {
     var body: some View {
         NavigationStack {
             VStack {
+                
                 PhotosPicker(
                     selection: $selectedItem,
                     matching: .images,
                     photoLibrary: .shared()) {
-                        Text("Add profile picture")
+                        Text("Välj en profilbild")
                     }
                     .onChange(of: selectedItem) { newItem in
                         Task {
@@ -50,26 +49,29 @@ struct ProfileView: View {
                 if let user = user {
                     VStack {
                         Text("E-post: \(user.email ?? "Not given")")
+                            .padding()
+
                         TextField("Ny e-post", text: $email)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
-                        SecureField("Password", text: $newPassword)
+
+                        SecureField("Lösenord", text: $newPassword)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
 
-                        Button("Update") {
+                        Button("Uppdatera") {
                             updateUserProfile()
                         }
                         .padding()
 
-                        Button("Logout") {
+                        Button("Logga ut") {
                             authViewModel.logout()
                         }
                         .padding()
 
                         
                         NavigationLink(destination: AddMealView(meals: $meals)) {
-                            Text("Add a meal")
+                            Text("Lägg till måltid")
                                 .padding()
                                 .background(Color.blue)
                                 .foregroundColor(.white)
@@ -77,27 +79,42 @@ struct ProfileView: View {
                         }
                         .padding(.top)
 
-                        NavigationLink(destination: HistoryView(), isActive: $showHistory) {
-                            Button("Visa historik") {
-                                showHistory = true
-                            }
-                            .padding()
+                     
+                        NavigationLink(destination: HistoryView(meals: $meals)) {
+                            Text("Visa historik")
+                                .padding()
+                                .background(Color.green)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
                         }
+                        .padding(.top)
                     }
                     .padding()
                 }
+
+                if isUploadingProfileImage {
+                    ProgressView("Laddar upp bild...")
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .padding()
+                }
             }
-            .navigationTitle("Profile")
+            .navigationTitle("Profil")
             .alert(isPresented: $showAlert) {
                 Alert(title: Text("Fel"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             }
         }
     }
 
+    // Upload Profile Image
     private func uploadProfileImage(data: Data) {
         guard let user = user else { return }
+        
+        isUploadingProfileImage = true
         let storageRef = Storage.storage().reference().child("profile_images/\(user.uid).jpg")
+        
         storageRef.putData(data, metadata: nil) { _, error in
+            isUploadingProfileImage = false
+            
             if let error = error {
                 alertMessage = "Fel vid uppladdning: \(error.localizedDescription)"
                 showAlert = true
@@ -114,9 +131,11 @@ struct ProfileView: View {
         }
     }
 
+   
     private func updateFirestoreProfileImageURL(_ url: URL) {
         guard let user = user else { return }
         let db = Firestore.firestore()
+        
         db.collection("users").document(user.uid).setData(["profileImageURL": url.absoluteString], merge: true) { error in
             if let error = error {
                 alertMessage = "Fel vid uppdatering av profilbild: \(error.localizedDescription)"
@@ -125,6 +144,7 @@ struct ProfileView: View {
         }
     }
 
+    // Update User Profile
     private func updateUserProfile() {
         guard let user = user else { return }
 
