@@ -11,12 +11,14 @@ struct RootView: View {
     @StateObject var authViewModel = AuthViewModel()
 
     var body: some View {
-        Group {
-            if authViewModel.isLoggedIn {
-                ContentView()
-                    .environmentObject(authViewModel)
-            } else {
-                LoginView(authViewModel: authViewModel)
+        NavigationView {
+            Group {
+                if authViewModel.isLoggedIn {
+                    ProfileView() // <-- Visa profilvy efter inloggning
+                        .environmentObject(authViewModel)
+                } else {
+                    LoginView(authViewModel: authViewModel)
+                }
             }
         }
     }

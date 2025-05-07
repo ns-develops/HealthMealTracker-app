@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		701FDADE2DC153370050BA7B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 701FDADD2DC153370050BA7B /* FirebaseAuth */; };
 		701FDAE02DC153370050BA7B /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 701FDADF2DC153370050BA7B /* FirebaseFirestore */; };
+		705DB9D22DCAB9C300EF7B47 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 705DB9D12DCAB9C300EF7B47 /* FirebaseStorage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 			files = (
 				701FDADE2DC153370050BA7B /* FirebaseAuth in Frameworks */,
 				701FDAE02DC153370050BA7B /* FirebaseFirestore in Frameworks */,
+				705DB9D22DCAB9C300EF7B47 /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,6 +123,7 @@
 			packageProductDependencies = (
 				701FDADD2DC153370050BA7B /* FirebaseAuth */,
 				701FDADF2DC153370050BA7B /* FirebaseFirestore */,
+				705DB9D12DCAB9C300EF7B47 /* FirebaseStorage */,
 			);
 			productName = "VitaminList-app";
 			productReference = 701FDAAF2DC14FB20050BA7B /* VitaminList-app.app */;
@@ -586,6 +589,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 701FDADC2DC153370050BA7B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		705DB9D12DCAB9C300EF7B47 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 701FDADC2DC153370050BA7B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -8,49 +8,55 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
+    @StateObject var authViewModel = AuthViewModel()
     @StateObject var uploader = VegetableUploader()
 
     var body: some View {
-        VStack(spacing: 20) {
-            HStack {
-                Text("Vegetable List")
-                    .font(.title)
-                Spacer()
-                Button("Logga ut") {
-                    authViewModel.logout()
-                }
-                .foregroundColor(.red)
-            }
-            .padding(.horizontal)
-            .padding(.top)
-
-            Button(action: {
-                uploader.uploadVegetables()
-            }) {
-                Text("Upload Vegetables")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.green)
-                    .cornerRadius(10)
+        Group {
+            if authViewModel.isLoggedIn {
+                VStack(spacing: 20) {
+                    HStack {
+                        Text("Vegetable List")
+                            .font(.title)
+                        Spacer()
+                        Button("Logga ut") {
+                            authViewModel.logout()
+                        }
+                        .foregroundColor(.red)
+                    }
                     .padding(.horizontal)
-            }
+                    .padding(.top)
 
-            List(uploader.vegetables) { vegetable in
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(vegetable.name)
-                        .font(.headline)
-                    Text("Vitamins: \(vegetable.vitamins.map { "\($0.key): \($0.value)" }.joined(separator: ", "))")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                    Button(action: {
+                        uploader.uploadVegetables()
+                    }) {
+                        Text("Upload Vegetables")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.green)
+                            .cornerRadius(10)
+                            .padding(.horizontal)
+                    }
+
+                    List(uploader.vegetables) { vegetable in
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(vegetable.name)
+                                .font(.headline)
+                            Text("Vitamins: \(vegetable.vitamins.map { "\($0.key): \($0.value)" }.joined(separator: ", "))")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.vertical, 4)
+                    }
                 }
-                .padding(.vertical, 4)
+                .onAppear {
+                    uploader.fetchVegetables()
+                }
+            } else {
+                LoginView(authViewModel: authViewModel)
             }
-        }
-        .onAppear {
-            uploader.fetchVegetables()
         }
     }
 }
