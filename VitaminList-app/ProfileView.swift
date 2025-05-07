@@ -13,7 +13,10 @@ import PhotosUI
 
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    
 
+    @State private var meals: [Meal] = []
+    
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var profileImageData: Data? = nil
     @State private var email = ""
@@ -33,7 +36,7 @@ struct ProfileView: View {
                     selection: $selectedItem,
                     matching: .images,
                     photoLibrary: .shared()) {
-                        Text("Välj en profilbild")
+                        Text("Add profile picture")
                     }
                     .onChange(of: selectedItem) { newItem in
                         Task {
@@ -63,6 +66,16 @@ struct ProfileView: View {
                             authViewModel.logout()
                         }
                         .padding()
+
+                        
+                        NavigationLink(destination: AddMealView(meals: $meals)) {
+                            Text("Add a meal")
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                        .padding(.top)
 
                         NavigationLink(destination: HistoryView(), isActive: $showHistory) {
                             Button("Visa historik") {

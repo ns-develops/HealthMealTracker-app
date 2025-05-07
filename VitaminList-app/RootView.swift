@@ -14,7 +14,7 @@ struct RootView: View {
         NavigationView {
             Group {
                 if authViewModel.isLoggedIn {
-                    ProfileView() // <-- Visa profilvy efter inloggning
+                    ProfileView() 
                         .environmentObject(authViewModel)
                 } else {
                     LoginView(authViewModel: authViewModel)
