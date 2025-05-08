@@ -9,7 +9,6 @@ import Foundation
 import FirebaseFirestore
 
 
-
 struct Meal: Identifiable {
     var id: String?
     var protein: String
@@ -18,10 +17,15 @@ struct Meal: Identifiable {
     var sweets: String
     var dateAdded: Date
     var done: Bool
+
+   
+    var name: String {
+        return "\(protein) with \(carbohydrates) and \(salad)" 
+    }
 }
 
+
 extension Meal {
-  
     init?(document: [String: Any]) {
         guard
             let protein = document["protein"] as? String,
@@ -34,7 +38,6 @@ extension Meal {
             return nil
         }
 
-    
         self.id = document["id"] as? String
         self.protein = protein
         self.carbohydrates = carbohydrates

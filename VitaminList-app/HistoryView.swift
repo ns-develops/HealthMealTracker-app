@@ -78,7 +78,7 @@ struct HistoryView: View {
 
 
     private func removeMeal(_ mealId: String) {
-        // Ta bort måltiden från Firestore
+
         db.collection("meals").document(mealId).delete { error in
             if let error = error {
                 print("Error deleting meal: \(error.localizedDescription)")

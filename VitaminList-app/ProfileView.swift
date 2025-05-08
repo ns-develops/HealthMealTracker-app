@@ -12,9 +12,7 @@ import PhotosUI
 
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    
     @State private var meals: [Meal] = []
-    
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var profileImageData: Data? = nil
     @State private var email = ""
@@ -22,7 +20,7 @@ struct ProfileView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var isUploadingProfileImage = false
-    
+
     private var user: User? {
         Auth.auth().currentUser
     }
@@ -31,6 +29,22 @@ struct ProfileView: View {
         NavigationStack {
             VStack {
                 
+                HStack {
+                    Text("Profil")
+                        .font(.largeTitle)
+                        .bold()
+                    
+                    Spacer()
+                    
+                    Button("Logga ut") {
+                        authViewModel.logout()
+                    }
+                    .padding(.top, 10)
+                    .foregroundColor(.blue)
+                }
+                .padding(.horizontal)
+
+              
                 PhotosPicker(
                     selection: $selectedItem,
                     matching: .images,
@@ -46,11 +60,13 @@ struct ProfileView: View {
                         }
                     }
 
+                
                 if let user = user {
                     VStack {
-                        Text("E-post: \(user.email ?? "Not given")")
+                         Text("E-post: \(user.email ?? "Not given")")
                             .padding()
 
+                     
                         TextField("Ny e-post", text: $email)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
@@ -63,27 +79,38 @@ struct ProfileView: View {
                             updateUserProfile()
                         }
                         .padding()
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .background(Color(hex: "#003366"))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .padding(.top)
 
-                        Button("Logga ut") {
-                            authViewModel.logout()
-                        }
-                        .padding()
-
-                        
-                        NavigationLink(destination: AddMealView(meals: $meals)) {
-                            Text("Lägg till måltid")
+                       
+                        NavigationLink(destination: WeeklyStatusView(meals: $meals)) {
+                            Text("Weekly Status")
                                 .padding()
-                                .background(Color.blue)
+                                .frame(maxWidth: .infinity, minHeight: 50)
+                                .background(Color(hex: "#003366"))
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
                         .padding(.top)
 
-                     
+                        NavigationLink(destination: AddMealView(meals: $meals)) {
+                            Text("Lägg till måltid")
+                                .padding()
+                                .frame(maxWidth: .infinity, minHeight: 50)
+                                .background(Color(hex: "#003366"))
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                        .padding(.top)
+
                         NavigationLink(destination: HistoryView(meals: $meals)) {
                             Text("Visa historik")
                                 .padding()
-                                .background(Color.green)
+                                .frame(maxWidth: .infinity, minHeight: 50)
+                                .background(Color(hex: "#003366"))
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
@@ -92,20 +119,18 @@ struct ProfileView: View {
                     .padding()
                 }
 
+              
                 if isUploadingProfileImage {
                     ProgressView("Laddar upp bild...")
                         .progressViewStyle(CircularProgressViewStyle())
                         .padding()
                 }
-            }
-            .navigationTitle("Profil")
-            .alert(isPresented: $showAlert) {
-                Alert(title: Text("Fel"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+    
             }
         }
     }
 
-   
+
     private func uploadProfileImage(data: Data) {
         guard let user = user else { return }
         
@@ -131,7 +156,7 @@ struct ProfileView: View {
         }
     }
 
-   
+
     private func updateFirestoreProfileImageURL(_ url: URL) {
         guard let user = user else { return }
         let db = Firestore.firestore()
@@ -144,7 +169,7 @@ struct ProfileView: View {
         }
     }
 
-
+   
     private func updateUserProfile() {
         guard let user = user else { return }
 
