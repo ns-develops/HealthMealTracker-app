@@ -9,39 +9,63 @@ import FirebaseFirestore
 
 struct HistoryView: View {
     @Binding var meals: [Meal]
-    
+    @State private var checkedMeals: [String: Bool] = [:]
     var db = Firestore.firestore()
 
     var body: some View {
         VStack {
-            Text("Måltidshistorik")
+            Text("Meal History")
                 .font(.title)
                 .padding()
-
             
             if meals.isEmpty {
-                Text("Inga måltider tillgängliga.")
+                Text("No meals available.")
                     .foregroundColor(.gray)
                     .padding()
             } else {
                 List(meals) { meal in
-                    VStack(alignment: .leading) {
-                        Text("Protein: \(meal.protein)")
-                        Text("Kolhydrater: \(meal.carbohydrates)")
-                        Text("Sallad: \(meal.salad)")
-                        Text("Sötsaker: \(meal.sweets)")
-                        Text("Datum: \(meal.dateAdded, style: .date)")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                    HStack {
+                        Toggle(isOn: Binding(
+                            get: { checkedMeals[meal.id ?? ""] ?? meal.done },
+                            set: { newValue in
+                                checkedMeals[meal.id ?? ""] = newValue
+                                updateMealStatus(meal.id ?? "", done: newValue)
+                            }
+                        )) {
+                            VStack(alignment: .leading) {
+                                Text("Protein: \(meal.protein)")
+                                Text("Carbs: \(meal.carbohydrates)")
+                                Text("Salad: \(meal.salad)")
+                                Text("Sweets: \(meal.sweets)")
+                                    .foregroundColor(.secondary)
+                                Text("Date: \(meal.dateAdded, style: .date)")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .toggleStyle(SwitchToggleStyle(tint: .blue))
                     }
-                    .padding(.vertical, 8)
+                    .padding()
                 }
             }
         }
-        .padding()
-        .navigationTitle("Historik")
         .onAppear {
             fetchMealsFromFirestore()
+        }
+    }
+
+   
+    private func updateMealStatus(_ mealId: String, done: Bool) {
+        let mealRef = db.collection("meals").document(mealId)
+        
+        mealRef.updateData([
+            "done": done
+        ]) { error in
+            if let error = error {
+                print("Error updating meal status: \(error.localizedDescription)")
+            } else {
+                print("Meal status updated successfully.")
+            }
         }
     }
 
@@ -51,16 +75,15 @@ struct HistoryView: View {
             .order(by: "dateAdded", descending: true)
             .addSnapshotListener { snapshot, error in
                 if let error = error {
-                    print("Error fetching meals: \(error)")
+                    print("Error fetching meals: \(error.localizedDescription)")
                     return
                 }
-                
+
                 guard let snapshot = snapshot else {
                     print("Snapshot is nil")
                     return
                 }
                 
-               
                 meals = snapshot.documents.compactMap { document -> Meal? in
                     let data = document.data()
                     
@@ -69,9 +92,10 @@ struct HistoryView: View {
                         let carbohydrates = data["carbohydrates"] as? String,
                         let salad = data["salad"] as? String,
                         let sweets = data["sweets"] as? String,
-                        let dateAddedTimestamp = data["dateAdded"] as? Timestamp
+                        let dateAddedTimestamp = data["dateAdded"] as? Timestamp,
+                        let done = data["done"] as? Bool
                     else {
-                        print("Invalid data for meal: \(document.documentID)")
+                        print("Invalid data for document: \(document.documentID)")
                         return nil
                     }
                     
@@ -83,7 +107,8 @@ struct HistoryView: View {
                         carbohydrates: carbohydrates,
                         salad: salad,
                         sweets: sweets,
-                        dateAdded: dateAdded
+                        dateAdded: dateAdded,
+                        done: done
                     )
                 }
             }

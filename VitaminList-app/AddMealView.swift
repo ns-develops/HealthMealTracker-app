@@ -15,12 +15,12 @@ struct AddMealView: View {
     @State private var carbohydrates = ""
     @State private var salad = ""
     @State private var sweets = ""
-
+    
     var body: some View {
         VStack(spacing: 20) {
             Text("Add a meal")
                 .font(.title)
-
+            
             TextField("Protein", text: $protein)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
@@ -38,7 +38,7 @@ struct AddMealView: View {
                 .padding()
             
             Button("Save meal") {
-                // Save the meal to Firestore
+        
                 saveMealToFirestore()
             }
             .padding()
@@ -51,25 +51,28 @@ struct AddMealView: View {
         .navigationTitle("Add Meal")
     }
     
- 
+    
     private func saveMealToFirestore() {
         let newMeal = Meal(
-            id: nil, 
+            id: nil,
             protein: protein,
             carbohydrates: carbohydrates,
             salad: salad,
             sweets: sweets,
-            dateAdded: Date()
+            dateAdded: Date(),
+            done: true
         )
         
         let db = Firestore.firestore()
         
+       
         db.collection("meals").addDocument(data: [
             "protein": newMeal.protein,
             "carbohydrates": newMeal.carbohydrates,
             "salad": newMeal.salad,
             "sweets": newMeal.sweets,
-            "dateAdded": newMeal.dateAdded
+            "dateAdded": newMeal.dateAdded,
+            "done": newMeal.done
         ]) { error in
             if let error = error {
                 print("Error saving meal: \(error.localizedDescription)")

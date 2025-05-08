@@ -51,16 +51,19 @@ struct ContentView: View {
                             .padding()
 
                         Button("Save meal") {
+                           
                             let newMeal = Meal(
+                                id: nil,
                                 protein: protein,
                                 carbohydrates: carbohydrates,
                                 salad: salad,
                                 sweets: sweets,
-                                dateAdded: Date() 
+                                dateAdded: Date(),
+                                done: false
                             )
+                            
                             meals.append(newMeal)
                             
-                            // Clear input fields
                             protein = ""
                             carbohydrates = ""
                             salad = ""
