@@ -105,7 +105,7 @@ struct ProfileView: View {
         }
     }
 
-    // Upload Profile Image
+   
     private func uploadProfileImage(data: Data) {
         guard let user = user else { return }
         
@@ -144,7 +144,7 @@ struct ProfileView: View {
         }
     }
 
-    // Update User Profile
+
     private func updateUserProfile() {
         guard let user = user else { return }
 

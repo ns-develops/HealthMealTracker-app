@@ -29,7 +29,14 @@ struct HistoryView: View {
                             get: { checkedMeals[meal.id ?? ""] ?? meal.done },
                             set: { newValue in
                                 checkedMeals[meal.id ?? ""] = newValue
-                                updateMealStatus(meal.id ?? "", done: newValue)
+                                
+                                if newValue {
+                                  
+                                    updateMealStatus(meal.id ?? "", done: true)
+                                } else {
+                                    
+                                    removeMeal(meal.id ?? "")
+                                }
                             }
                         )) {
                             VStack(alignment: .leading) {
@@ -54,7 +61,7 @@ struct HistoryView: View {
         }
     }
 
-   
+
     private func updateMealStatus(_ mealId: String, done: Bool) {
         let mealRef = db.collection("meals").document(mealId)
         
@@ -65,6 +72,22 @@ struct HistoryView: View {
                 print("Error updating meal status: \(error.localizedDescription)")
             } else {
                 print("Meal status updated successfully.")
+            }
+        }
+    }
+
+
+    private func removeMeal(_ mealId: String) {
+        // Ta bort måltiden från Firestore
+        db.collection("meals").document(mealId).delete { error in
+            if let error = error {
+                print("Error deleting meal: \(error.localizedDescription)")
+            } else {
+             
+                if let index = meals.firstIndex(where: { $0.id == mealId }) {
+                    meals.remove(at: index)
+                }
+                print("Meal deleted successfully.")
             }
         }
     }
